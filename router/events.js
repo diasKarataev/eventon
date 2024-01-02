@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const Event = require('../models/event');
+const Event = require('../entity/event');
+
 
 router.post('/', async (req, res) => {
     try {
