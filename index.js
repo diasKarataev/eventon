@@ -5,6 +5,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser')
 const eventRouter = require('./router/events.js');
 const authRouter = require('./router/auth.js');
+const userRouter = require('./router/user.js');
 const errorMiddleware = require('./middleware/error-middleware');
 
 
@@ -23,6 +24,7 @@ app.listen(PORT, () => {
 // Использование маршрутов для событий
 app.use('/events', eventRouter);
 app.use('/auth', authRouter);
+app.use('/users', userRouter);
 
 
 

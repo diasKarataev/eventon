@@ -55,13 +55,6 @@ class AuthController {
             next(e);
         }
     }
-    async users(req, res, next){
-        try {
-
-        } catch (e){
-            next(e);
-        }
-    }
 }
 
 module.exports = new AuthController();
