@@ -1,41 +1,41 @@
-const Event = require("../entity/event");
+const EventModel = require("../entity/event");
 const ApiError = require('../exceptions/api-error');
 
-class EventService {
+class EventModelService {
     async getEvents() {
         try {
-            return await Event.find();
+            return await EventModel.find();
         } catch (error) {
             throw new Error(error.message);
         }
     }
-    async getEvent(eventId){
-        const event = await Event.findById(eventId);
-        if (!event) {
+    async getEvent(EventId){
+        const EventModel = await EventModel.findById(EventId);
+        if (!EventModel) {
             throw ApiError.BadRequest('Event not found');
         }
-        return event;
+        return EventModel;
     }
-    async createEvent(title, description) {
+    async createEvent(title, description, capacity, ticket_price) {
         try {
-            const newEvent = new Event({ title, description });
-            return await newEvent.save();
+            const newEventModel = new EventModel({ title, description,capacity,ticket_price });
+            return await newEventModel.save();
         } catch (error) {
             throw new Error(error.message);
         }
     }
-    async updateEvent(eventId, title, description){
-        const updatedEvent = await Event.findByIdAndUpdate(eventId, {title, description}, {new: true});
-        if (!updatedEvent) {
-            throw ApiError.BadRequest('Cannot find event');
+    async updateEvent(EventModelId, title, description, capacity, ticket_price){
+        const updatedEventModel = await EventModel.findByIdAndUpdate(EventModelId, {title, description, capacity, ticket_price}, {new: true});
+        if (!updatedEventModel) {
+            throw ApiError.BadRequest('Cannot find EventModel');
         }
-        return updatedEvent;
+        return updatedEventModel;
     }
-    async deleteEvent(eventId){
-        const event = await Event.findByIdAndDelete(eventId);
-        if (event == null) {
-            throw ApiError.BadRequest('Cannot find event');
+    async deleteEvent(EventModelId){
+        const EventModel = await EventModel.findByIdAndDelete(EventModelId);
+        if (EventModel == null) {
+            throw ApiError.BadRequest('Cannot find EventModel');
         }
     }
 }
-module.exports = new EventService();
+module.exports = new EventModelService();
