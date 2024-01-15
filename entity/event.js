@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 
-
 const eventSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -13,12 +12,20 @@ const eventSchema = new mongoose.Schema({
     date: {
         type: Date,
         default: Date.now
+    },
+    ticket_price: {
+        type: Number,
+        require: true
+    },
+    capacity: {
+        type: Number,
+        require: true
     }
 }, {
     versionKey: false // Отключаем поле __v
 });
 
 
-const Event = mongoose.model('Event', eventSchema);
+const EventModel = mongoose.model('Event', eventSchema);
 
-module.exports = Event;
+module.exports = EventModel;

@@ -12,9 +12,6 @@ class MailService {
             }
         })
     }
-
-
-
     async sendActivationMail(to, link){
         const htmlContent = `
         <div>
