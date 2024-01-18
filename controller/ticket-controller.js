@@ -7,6 +7,7 @@ const getUserTicketsDto = require('../dto/getUserTickets-dto')
 const uuid = require("uuid");
 const paymentService = require('../service/payment-service');
 const EventModel = require("../entity/event");
+
 class TicketController {
     async getEventTickets(req,res,next){
         const eventId = req.params.id;
@@ -90,8 +91,18 @@ class TicketController {
         }
     }
     async postbackOrder(req, res, next){
-        const { order_id } = req.body;
-        res.json(await paymentService.invoicePostback(order_id));
+        console.log("POSTBACK")
+        const { status, invoice_id, amount_crypto, currency, order_id, token } = req.body;
+        await paymentService.invoicePostback(order_id);
+        const responseJson = {
+            "status": status,
+            "invoice_id": invoice_id,
+            "amount_crypto": amount_crypto,
+            "currency": currency
+        };
+        res.json(
+            responseJson
+        );
     }
 }
 module.exports = new TicketController();

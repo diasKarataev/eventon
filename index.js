@@ -9,6 +9,8 @@ const userRouter = require('./router/user.js');
 const ticketRouter = require('./router/tickets.js');
 const adminRouter = require('./router/admin.js');
 const errorMiddleware = require('./middleware/error-middleware');
+const bodyParser = require('body-parser');
+
 
 
 const app = express();
@@ -18,6 +20,8 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(cors());
 app.use(errorMiddleware); // Идет всегда полседним
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.listen(PORT,() => {
