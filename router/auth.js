@@ -11,6 +11,6 @@ router.post('/registration',
 router.post('/login', authController.login);
 router.post('/logout', authController.logout);
 router.get('/activate/:link', authController.activate);
-router.post('/refresh', authController.refresh);
+router.get('/refresh', authController.refresh);
 
 module.exports = router;

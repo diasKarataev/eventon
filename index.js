@@ -18,7 +18,10 @@ const PORT = process.env.PORT || 8080;
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({
+    credentials: true,
+    origin: process.env.CLIENT_URL
+}));
 app.use(errorMiddleware); // Идет всегда полседним
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
