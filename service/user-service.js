@@ -2,9 +2,9 @@ const UserModel = require('../entity/user');
 const tokenService = require('./token-service')
 class UserService {
     async getUsers(){
-        const users = await UserModel.find();
-        return users;
+        return await UserModel.find();
     }
+
 
     async makeMeAdmin(token) {
         try {

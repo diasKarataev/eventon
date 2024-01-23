@@ -9,8 +9,8 @@ const userRouter = require('./router/user.js');
 const ticketRouter = require('./router/tickets.js');
 const adminRouter = require('./router/admin.js');
 const errorMiddleware = require('./middleware/error-middleware');
-const bodyParser = require('body-parser');
-
+const bodyParser = require('body-parser')
+const imageRouter = require('./router/image')
 
 
 const app = express();
@@ -30,13 +30,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.listen(PORT,() => {
     console.log(`Server is running on port ${PORT}...`);
 });
-// Использование маршрутов для событий
+
 app.use('/events', eventRouter);
 app.use('/auth', authRouter);
 app.use('/users', userRouter);
 app.use('/tickets', ticketRouter);
 app.use('/admin', adminRouter);
-
-
-
+app.use('/image', imageRouter);
 

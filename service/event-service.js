@@ -10,11 +10,11 @@ class EventModelService {
         }
     }
     async getEvent(EventId){
-        const EventModel = await EventModel.findById(EventId);
-        if (!EventModel) {
+        const model = await EventModel.findById(EventId);
+        if (!model) {
             throw ApiError.BadRequest('Event not found');
         }
-        return EventModel;
+        return model;
     }
     async createEvent(title, description, capacity, ticket_price) {
         try {
