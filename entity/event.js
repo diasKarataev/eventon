@@ -20,9 +20,13 @@ const eventSchema = new mongoose.Schema({
     capacity: {
         type: Number,
         require: true
+    },
+    imagesIds: {
+        type: [String],
+        default: []
     }
 }, {
-    versionKey: false // Отключаем поле __v
+    versionKey: false
 });
 
 

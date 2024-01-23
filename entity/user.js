@@ -5,7 +5,8 @@ const UserSchema = new Schema({
     password: {type: String, require: true},
     role: {type: String, require: true},
     isActivated: {type: Boolean, require: true},
-    activationLink: {type: String}
+    activationLink: {type: String},
+    profilePictureId: {type: String}
 })
 
 module.exports = model('User', UserSchema);

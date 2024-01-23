@@ -28,7 +28,7 @@ class TicketController {
         const activationLink = uuid.v4();
         const order_id = uuid.v4();
         try {
-            const ticket= await eventTicket.create(
+            await eventTicket.create(
                 {
                     event: eventId,
                     seat_row,
@@ -40,8 +40,8 @@ class TicketController {
             );
             const event = await EventModel.findById(eventId);
             const amount = event.ticket_price;
-            await paymentService.createInvoice(amount,order_id, user.email);
-            res.json(ticket);
+            const invoiceModel = await paymentService.createInvoice(amount,order_id, user.email);
+            res.json(invoiceModel);
         } catch (e) {
             next(e);
         }

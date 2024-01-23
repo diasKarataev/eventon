@@ -1,10 +1,22 @@
 const userService = require('../service/user-service');
 const authService = require("../service/auth-service");
+const tokenService = require("../service/token-service");
+const UserModel = require("../entity/user");
 class UserController {
     async getUsers(req, res, next){
         try{
             const users = await userService.getUsers();
             return res.json(users);
+        } catch (e){
+            next(e);
+        }
+    }
+    async getProfile(req, res, next){
+        const { refreshToken } = req.cookies;
+        const tokenData = tokenService.validateRefreshToken(refreshToken);
+        try{
+            const user = await UserModel.findById(tokenData.id);
+            return res.json(user);
         } catch (e){
             next(e);
         }
