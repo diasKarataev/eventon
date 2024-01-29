@@ -1,24 +1,15 @@
-# Используем официальный образ Node.js
-FROM node:18
+FROM node:18.18.0
 
-# Устанавливаем рабочую директорию внутри контейнера
 WORKDIR /usr/src/app
 
-# Копируем package.json и package-lock.json для установки зависимостей
 COPY package*.json ./
 
-# Устанавливаем зависимости
 RUN npm install
-RUN npm update
 
-# Копируем .env файл внутрь контейнера
-COPY .env ./
+RUN mkdir uploads
 
-# Копируем остальные файлы проекта
 COPY . .
 
-# Определяем порт, который будет использоваться в приложении
-EXPOSE 3000
+EXPOSE 8080
 
-# Команда для запуска приложения
 CMD ["npm", "start"]

@@ -1,0 +1,13 @@
+version: '3'
+services:
+  app:
+    image: diskar/eventon
+    container_name: eventon-app
+    ports:
+      - "8080:8080"
+    environment:
+      NODE_ENV: production
+    volumes:
+      - .env:/app/.env
+    restart: always
+
