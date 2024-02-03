@@ -6,6 +6,4 @@ const userController = require('../controller/user-controller')
 
 router.get('', authMiddleware, userController.getUsers);
 router.get('/profile', authMiddleware, userController.getProfile);
-router.get('/admin', authMiddleware, userController.makeMeAdmin);
-router.get('/user', authMiddleware, userController.makeMeUser);
 module.exports = router;

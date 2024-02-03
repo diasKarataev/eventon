@@ -15,14 +15,9 @@ class ImageController {
            if (!image) {
                return res.status(404).send('Image not found');
            }
-
-           // Resolve the image path to an absolute path
            const absoluteImagePath = path.resolve(image.imagePath);
-
-           // Send the image as a response
            res.sendFile(absoluteImagePath);
        } catch (error) {
-           console.error(error);
            res.status(500).send('Internal Server Error');
        }
    }
@@ -40,7 +35,6 @@ class ImageController {
            await UserModel.findByIdAndUpdate(tokenData.id, {$set: {profilePictureId : image.id}});
            res.status(201).send({ image });
        } catch (error) {
-           console.error(error);
            res.status(500).send('Internal Server Error');
        }
    }
@@ -55,7 +49,6 @@ class ImageController {
             await EventModel.findByIdAndUpdate(req.params.id, { $set: { imagesIds: images } });
             res.status(201).send({ image });
         } catch (error) {
-            console.error(error);
             res.status(500).send('Internal Server Error');
         }
     }
@@ -77,7 +70,6 @@ class ImageController {
 
             res.status(200).send('Image deleted successfully');
         } catch (error) {
-            console.error(error);
             res.status(400).send('Bad Request');
         }
     }
@@ -86,7 +78,6 @@ class ImageController {
             const images = await Image.find();
             res.json(images);
         } catch (error) {
-            console.error(error);
             res.status(500).send('Internal Server Error');
         }
     }
@@ -110,7 +101,6 @@ class ImageController {
 
             res.status(200).send('All images deleted successfully');
         } catch (error) {
-            console.error(error);
             res.status(400).send('Bad Request');
         }
     }

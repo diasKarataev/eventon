@@ -7,6 +7,7 @@ module.exports = class UserDto {
     activationLink;
     date;
     isActivated;
+    invoice_id;
     constructor(model){
         this.id = model.id;
         this.event = model.event;
@@ -16,5 +17,6 @@ module.exports = class UserDto {
         this.activationLink = model.activationLink;
         this.date = model.date;
         this.isActivated = model.isActivated;
+        this.invoice_id = model.invoice_id;
     }
 }

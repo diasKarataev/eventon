@@ -1,14 +1,12 @@
 const eventService = require('../service/event-service')
-const ApiError = require("../exceptions/api-error");
-
 
 class EventController {
     async getEvents(req, res, next) {
         try {
             const events = await eventService.getEvents();
             res.json(events);
-        } catch (error) {
-            next(error);
+        } catch (e) {
+            next(e);
         }
     }
 
@@ -17,9 +15,8 @@ class EventController {
             const eventId = req.params.id;
             const event = await eventService.getEvent(eventId);
             res.json(event);
-
         } catch (e) {
-            return res.status(400).json({ message: 'Not found' });
+            next(e);
         }
     }
     async createEvent(req, res, next) {
@@ -27,8 +24,8 @@ class EventController {
             const { title, description, capacity, ticket_price } = req.body;
             const savedEvent = await eventService.createEvent(title, description, capacity, ticket_price);
             res.json(savedEvent);
-        } catch (error) {
-            next(error);
+        } catch (e) {
+            next(e);
         }
     }
 
@@ -46,7 +43,7 @@ class EventController {
 
     async deleteEvent(req, res, next){
         try {
-            const event = await eventService.deleteEvent(req.params.id)
+            await eventService.deleteEvent(req.params.id)
             res.json({ message: 'Event deleted successfully' });
         } catch (e) {
             next(e);

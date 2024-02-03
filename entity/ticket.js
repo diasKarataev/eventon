@@ -29,8 +29,9 @@ const eventTicketSchema = new Schema({
         type: Boolean,
         require: true
     },
-    activationLink: {type: String},
-    order_id: {type: String}
+    activationLink: {type: String, require: true},
+    order_id: {type: String, require: true},
+    invoice_id: {type: String, require: true}
 }, {
     versionKey: false // Отключаем поле __v
 });

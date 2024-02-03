@@ -10,38 +10,60 @@ const EventModel = require("../entity/event");
 
 class TicketController {
     async getEventTickets(req,res,next){
-        const eventId = req.params.id;
-        res.json(await eventTicket.find({event: req.params.id}));
+        try {
+            const eventId = req.params.id;
+            const tickets = await eventTicket.find({event: eventId})
+            if(!tickets) {
+                throw ApiError.BadRequest('No tickets found')
+            }
+            res.json(tickets);
+        } catch (e){
+            next(e);
+        }
     }
 
-    async buyEventTicket(req, res, next){
-        const {refreshToken} = req.cookies;
-        const tokenData = tokenService.validateRefreshToken(refreshToken);
-        const user = await UserModel.findById(tokenData.id);
 
-        const eventId = req.params.id;
-        const {seat_row, seat_number} = req.body;
-        const existingTicket = await eventTicket.findOne({ event: eventId, seat_row, seat_number });
-        if (existingTicket) {
-            return res.status(400).json({ message: 'Это место уже занято' });
-        }
-        const activationLink = uuid.v4();
-        const order_id = uuid.v4();
+    async buyEventTicket(req, res, next){
         try {
-            await eventTicket.create(
-                {
+            const accessToken = req.headers.authorization;
+            const tokenData = tokenService.validateAccessToken(accessToken);
+            console.log(accessToken)
+            if (!tokenData) {
+                throw ApiError.UnauthorizedError();
+            }
+
+            const user = await UserModel.findById(tokenData.id);
+
+            const eventId = req.params.id;
+            const { seat_row, seat_number } = req.body;
+            const existingTicket = await eventTicket.findOne({ event: eventId, seat_row, seat_number });
+
+            if (existingTicket) {
+                return res.status(400).json({ message: 'Это место уже занято' });
+            }
+
+            const activationLink = uuid.v4();
+            const order_id = uuid.v4();
+
+            try {
+                const event = await EventModel.findById(eventId);
+                const amount = event.ticket_price;
+                const invoiceModel = await paymentService.createInvoice(amount, order_id, user.email);
+
+                await eventTicket.create({
                     event: eventId,
                     seat_row,
                     seat_number,
                     user: user.id,
                     activationLink,
-                    order_id
-                }
-            );
-            const event = await EventModel.findById(eventId);
-            const amount = event.ticket_price;
-            const invoiceModel = await paymentService.createInvoice(amount,order_id, user.email);
-            res.json(invoiceModel);
+                    order_id,
+                    invoice_id: invoiceModel.result.uuid
+                });
+
+                res.json(invoiceModel);
+            } catch (e) {
+                next(e);
+            }
         } catch (e) {
             next(e);
         }
@@ -74,8 +96,8 @@ class TicketController {
 
     async getUserTickets(req, res, next) {
         try {
-            const { refreshToken } = req.cookies;
-            const tokenData = tokenService.validateRefreshToken(refreshToken);
+            const accessToken = req.headers.authorization;
+            const tokenData = tokenService.validateAccessToken(accessToken);
             const user = await UserModel.findById(tokenData.id);
             const tickets = await TicketModel.find({ user: user.id });
 
@@ -100,9 +122,7 @@ class TicketController {
             "amount_crypto": amount_crypto,
             "currency": currency
         };
-        res.json(
-            responseJson
-        );
+        res.json(responseJson);
     }
 }
 module.exports = new TicketController();

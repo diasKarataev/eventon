@@ -32,9 +32,11 @@ class TokenService{
 
     validateAccessToken(token){
         try {
-            const userData = jwt.verify(token, process.env.JWT_ACCESS);
+            const tokenWithoutBearer = token.replace('Bearer ', '');
+
+            const userData = jwt.verify(tokenWithoutBearer, process.env.JWT_ACCESS);
             return userData;
-        } catch (e){
+        } catch (e) {
             return null;
         }
     }

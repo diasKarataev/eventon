@@ -22,19 +22,21 @@ app.use(cors({
     credentials: true,
     origin: process.env.CLIENT_URL
 }));
-app.use(errorMiddleware); // Идет всегда полседним
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 
+app.use('/api/events', eventRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/users', userRouter);
+app.use('/api/tickets', ticketRouter);
+app.use('/api/admin', adminRouter);
+app.use('/api/image', imageRouter);
+app.use(express.urlencoded({ extended: true }));
+
+
+app.use(errorMiddleware);
+
 app.listen(PORT,() => {
     console.log(`Server is running on port ${PORT}...`);
 });
-
-app.use('/events', eventRouter);
-app.use('/auth', authRouter);
-app.use('/users', userRouter);
-app.use('/tickets', ticketRouter);
-app.use('/admin', adminRouter);
-app.use('/image', imageRouter);
-
