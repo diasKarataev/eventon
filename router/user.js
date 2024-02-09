@@ -6,4 +6,8 @@ const userController = require('../controller/user-controller')
 
 router.get('', authMiddleware, userController.getUsers);
 router.get('/profile', authMiddleware, userController.getProfile);
+router.get('/:id', authMiddleware, userController.getUserById);
+router.post('', authMiddleware, userController.createUser);
+router.patch('/:id', authMiddleware, userController.updateUser);
+router.delete('/:id', authMiddleware, userController.deleteUser);
 module.exports = router;

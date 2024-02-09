@@ -4,10 +4,10 @@ module.exports = class UserDto {
     isActivated;
     role;
     profilePictureId;
-    name; // Add the missing field
-    surname; // Add the missing field
-    birthdate; // Add the missing field
-    creationDate; // Add the missing field
+    name;
+    surname;
+    birthdate;
+    creationDate;
 
     constructor(model){
         this.email = model.email;
@@ -15,7 +15,6 @@ module.exports = class UserDto {
         this.isActivated = model.isActivated;
         this.role = model.role;
         this.profilePictureId = model.profilePictureId;
-        // Add the missing assignments
         this.name = model.name;
         this.surname = model.surname;
         this.birthDate = model.birthDate;
