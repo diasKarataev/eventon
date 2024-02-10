@@ -19,5 +19,6 @@ module.exports = class UserDto {
         this.surname = model.surname;
         this.birthDate = model.birthDate;
         this.creationDate = model.creationDate;
+        this.isSubscribed = model.isSubscribed;
     }
 }

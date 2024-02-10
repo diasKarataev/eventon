@@ -27,6 +27,31 @@ class MailService {
             html: htmlContent
         })
     }
+    async sendMailing(mails, message) {
+        try {
+            const htmlContent = `
+            <div>
+                <h1>От администрации eventon</h1>
+                <p>${message}</p>
+            </div>
+        `;
+
+            for (const user of mails) {
+                await this.transporter.sendMail({
+                    from: process.env.SMTP_USER,
+                    to: user,
+                    subject: 'Eventon',
+                    text: '',
+                    html: htmlContent
+                });
+            }
+
+            console.log('Emails sent successfully!');
+        } catch (error) {
+            console.error('Error sending emails:', error);
+            throw error;
+        }
+    }
 }
 
 module.exports = new MailService();

@@ -2,8 +2,21 @@ const UserModel = require('../entity/user');
 const ApiError = require('../exceptions/api-error');
 const bcrypt = require("bcrypt");
 const uuid = require("uuid");
+const mailingService = require('../service/mail-service')
 
 class UserService {
+    async getAllUsersEmails() {
+        const users = await UserModel.find();
+        const emails = [];
+
+        users.forEach(user => {
+            if (user.isSubscribed && user.email !== 'admin') {
+                emails.push(user.email);
+            }
+        });
+
+        return emails;
+    }
     async getUsers() {
         return await UserModel.find();
     }
@@ -48,6 +61,30 @@ class UserService {
             throw ApiError.BadRequest('User not found');
         }
         return user;
+    }
+    async toggleSubscription(userId) {
+        const user = await UserModel.findById(userId);
+        if (!user) {
+            throw ApiError.BadRequest('User not found');
+        }
+
+        user.isSubscribed = !user.isSubscribed;
+        await user.save();
+
+        return user;
+    }
+    async resendActivationLink(userId) {
+        const user = await UserModel.findById(userId);
+        if (!user) {
+            throw ApiError.BadRequest('User not found');
+        }
+        const newActivationLink = uuid.v4();
+
+        user.activationLink = newActivationLink;
+        await user.save();
+        await mailingService.sendActivationMail(user.email, newActivationLink);
+
+        return 'Email resent';
     }
 }
 
