@@ -10,7 +10,8 @@ const UserSchema = new Schema({
     name: {type: String, require: true},
     surname: {type: String, require: true},
     birthDate: {type: Date, require: true},
-    creationDate: {type: Date, require: true}
+    creationDate: {type: Date, require: true},
+    isSubscribed: {type: Boolean, require: true, default: true}
 })
 
 module.exports = model('User', UserSchema);
