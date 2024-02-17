@@ -12,16 +12,19 @@ class EventModelService {
         }
         return event;
     }
-    async createEvent(title, description, capacity, ticket_price) {
-        const newEventModel = new EventModel({ title, description,capacity,ticket_price });
+    async createEvent(title, description, capacity, ticket_price, city, map_latitude, map_longitude) {
+        const newEventModel = new EventModel({ title, description,capacity,ticket_price, city, map_latitude, map_longitude });
         return await newEventModel.save();
     }
-    async updateEvent(eventId, title, description, capacity, ticket_price) {
+    async updateEvent(eventId, title, description, capacity, ticket_price, city, map_latitude, map_longitude) {
         const updateFields = {};
         if (title) updateFields.title = title;
         if (description) updateFields.description = description;
         if (capacity) updateFields.capacity = capacity;
         if (ticket_price) updateFields.ticket_price = ticket_price;
+        if(city) updateFields.city = city;
+        if(map_latitude) updateFields.map_latitude = map_latitude;
+        if(map_longitude) updateFields.map_longitude = map_longitude;
 
         const event = await EventModel.findOneAndUpdate(
             { _id: eventId },

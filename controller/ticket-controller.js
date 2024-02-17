@@ -7,6 +7,7 @@ const getUserTicketsDto = require('../dto/getUserTickets-dto')
 const uuid = require("uuid");
 const paymentService = require('../service/payment-service');
 const EventModel = require("../entity/event");
+const OrderModel = require("../entity/order");
 
 class TicketController {
     async getEventTickets(req,res,next){
@@ -22,45 +23,47 @@ class TicketController {
         }
     }
 
-
     async buyEventTicket(req, res, next){
         try {
+            const { seat_row, seat_number } = req.body;
+
+            // Retrieve user information
             const accessToken = req.headers.authorization;
             const tokenData = tokenService.validateAccessToken(accessToken);
-            console.log(accessToken)
             if (!tokenData) {
                 throw ApiError.UnauthorizedError();
             }
-
             const user = await UserModel.findById(tokenData.id);
 
+            // Ticket validation
             const eventId = req.params.id;
-            const { seat_row, seat_number } = req.body;
             const existingTicket = await eventTicket.findOne({ event: eventId, seat_row, seat_number });
-
             if (existingTicket) {
                 return res.status(400).json({ message: 'Это место уже занято' });
             }
 
-            const activationLink = uuid.v4();
-            const order_id = uuid.v4();
-
+            // Ticket creation
             try {
                 const event = await EventModel.findById(eventId);
-                const amount = event.ticket_price;
-                const invoiceModel = await paymentService.createInvoice(amount, order_id, user.email);
+                const order_id = uuid.v4();
+                const invoiceModel = await paymentService.createInvoice(event.ticket_price, order_id, user.email);
 
-                await eventTicket.create({
+                const newTicket = await eventTicket.create({
                     event: eventId,
                     seat_row,
                     seat_number,
                     user: user.id,
-                    activationLink,
-                    order_id,
-                    invoice_id: invoiceModel.result.uuid
+                    activationLink: uuid.v4()
                 });
 
-                res.json(invoiceModel);
+                await OrderModel.create({
+                    paymentId: order_id,
+                    user: user.id,
+                    ticket: newTicket.id,
+                    invoice_id: invoiceModel.result.uuid
+                })
+
+                res.json('Ticket created');
             } catch (e) {
                 next(e);
             }
@@ -111,18 +114,6 @@ class TicketController {
         } catch (e) {
             next(e);
         }
-    }
-    async postbackOrder(req, res, next){
-        console.log("POSTBACK")
-        const { status, invoice_id, amount_crypto, currency, order_id, token } = req.body;
-        await paymentService.invoicePostback(order_id);
-        const responseJson = {
-            "status": status,
-            "invoice_id": invoice_id,
-            "amount_crypto": amount_crypto,
-            "currency": currency
-        };
-        res.json(responseJson);
     }
 }
 module.exports = new TicketController();
