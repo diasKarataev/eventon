@@ -11,6 +11,7 @@ const adminRouter = require('./router/admin.js');
 const errorMiddleware = require('./middleware/error-middleware');
 const bodyParser = require('body-parser')
 const imageRouter = require('./router/image')
+const ordersRouter = require('./router/orders')
 
 
 const app = express();
@@ -32,6 +33,7 @@ app.use('/api/users', userRouter);
 app.use('/api/tickets', ticketRouter);
 app.use('/api/admin', adminRouter);
 app.use('/api/image', imageRouter);
+app.use('/api/orders', ordersRouter);
 app.use(express.urlencoded({ extended: true }));
 
 

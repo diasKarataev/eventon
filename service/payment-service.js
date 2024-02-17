@@ -1,5 +1,6 @@
 const axios = require("axios");
 const TicketModel = require("../entity/ticket");
+const OrderModel = require("../entity/order");
 const ApiError = require("../exceptions/api-error");
 
 class PaymentService {
@@ -46,12 +47,13 @@ class PaymentService {
         return response.data;
     }
 
-    async invoicePostback(order_id) {
-        const ticket = await TicketModel.findOne({order_id});
-        if(!ticket){
+    async invoicePostback(paymentId) {
+        const order = await OrderModel.findOne({paymentId});
+        if(!order){
             throw ApiError.BadRequest('Ticket not found')
         }
-        ticket.isPayed = true;
+        const ticket = await TicketModel.findById(order.ticket)
+        ticket.isPaid = true;
         return await ticket.save();
     }
 }

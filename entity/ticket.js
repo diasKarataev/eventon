@@ -9,7 +9,7 @@ const eventTicketSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    isPayed: {
+    isPaid: {
         type: Boolean,
         default: false
     },
@@ -21,17 +21,11 @@ const eventTicketSchema = new Schema({
         type: String,
         require: true
     },
-    date: {
-        type: Date,
-        default: Date.now
-    },
     isActivated: {
         type: Boolean,
         require: true
     },
-    activationLink: {type: String, require: true},
-    order_id: {type: String, require: true},
-    invoice_id: {type: String, require: true}
+    activationLink: {type: String, require: true}
 }, {
     versionKey: false // Отключаем поле __v
 });

@@ -21,8 +21,8 @@ class EventController {
     }
     async createEvent(req, res, next) {
         try {
-            const { title, description, capacity, ticket_price } = req.body;
-            const savedEvent = await eventService.createEvent(title, description, capacity, ticket_price);
+            const { title, description, capacity, ticket_price, city, map_latitude, map_longitude } = req.body;
+            const savedEvent = await eventService.createEvent(title, description, capacity, ticket_price, city, map_latitude, map_longitude);
             res.json(savedEvent);
         } catch (e) {
             next(e);
@@ -32,8 +32,8 @@ class EventController {
     async updateEvent(req, res, next){
         try {
             const eventId = req.params.id;
-            const { title, description, capacity, ticket_price } = req.body;
-            const updatedEvent = await eventService.updateEvent(eventId, title, description, capacity, ticket_price);
+            const { title, description, capacity, ticket_price, city, map_latitude, map_longitude } = req.body;
+            const updatedEvent = await eventService.updateEvent(eventId, title, description, capacity, ticket_price, city, map_latitude, map_longitude);
             res.json(updatedEvent);
         } catch (e) {
             next(e);

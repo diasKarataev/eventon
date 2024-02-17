@@ -24,6 +24,18 @@ const eventSchema = new mongoose.Schema({
     imagesIds: {
         type: [String],
         default: []
+    },
+    city: {
+        type: String,
+        require: true
+    },
+    map_latitude: {
+        type: Number,
+        require: true
+    },
+    map_longitude: {
+        type: Number,
+        require: true
     }
 }, {
     versionKey: false
