@@ -63,7 +63,7 @@ class TicketController {
                     invoice_id: invoiceModel.result.uuid
                 })
 
-                res.json('Ticket created');
+                res.json(invoiceModel);
             } catch (e) {
                 next(e);
             }
@@ -113,6 +113,22 @@ class TicketController {
             res.json(ticketDTOArray);
         } catch (e) {
             next(e);
+        }
+    }
+
+    async getPaymentLink(req, res,next){
+        const ticket = req.params.ticket;
+        const accessToken = req.headers.authorization;
+        const tokenData = tokenService.validateAccessToken(accessToken);
+        const user = await UserModel.findById(tokenData.id);
+        try {
+            const order = await OrderModel.findOne({ticket});
+            if(user.id != order.user){
+                return res.status(401).json({ message: 'Wrong user' });
+            }
+            res.json(process.env.PAYMENT_SERVICE_URL + order.invoice_id);
+        } catch (e){
+            next(e)
         }
     }
 }
